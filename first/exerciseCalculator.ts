@@ -50,4 +50,13 @@ const calculateExercises = (dailyExerciseHours:number[],targetAmount:number):ana
 
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1],2))
+//console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1],2))
+
+const target:number = Number(process.argv[2])
+const daily:string[] = process.argv.slice(3)
+let dailyHours:number[] = []
+for(let i = 0; i < daily.length; i++){
+    dailyHours = dailyHours.concat(Number(daily[i]))
+}
+//console.log(dailyHours)
+console.log(calculateExercises(dailyHours,target))
