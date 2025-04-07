@@ -22,6 +22,19 @@ const calculateBmi = (height:number,weight:number):String => {
 
 //console.log(calculateBmi(180,74))
 
-const height:number = Number(process.argv[2])
-const weight:number = Number(process.argv[3])
-console.log(calculateBmi(height,weight))
+try {
+    if(!isNaN(Number(process.argv[2])) && !isNaN(Number(process.argv[3]))){
+        const height:number = Number(process.argv[2])
+        const weight:number = Number(process.argv[3])
+        console.log(calculateBmi(height,weight))  
+    }
+    else{
+        throw new Error('Provided values are not numbers!')
+    }      
+} catch (error:unknown) {
+    let errorMessage = 'Something bad happened'
+    if(error instanceof Error){
+        errorMessage += ' Error '+ error.message
+    }
+    console.log(errorMessage)
+}
