@@ -15,27 +15,27 @@ interface exercise {
 
 const parseArguments = (args:string[]):exercise => {
 
-    if(args.length < 4) throw new Error('Not enough arguments')
+    if(args.length < 4) throw new Error('Not enough arguments');
 
     if(isNaN(Number(args[2]))){
-        throw new Error('Provided values are not numbers!')
+        throw new Error('Provided values are not numbers!');
     }    
-    const target:number = Number(process.argv[2])
+    const target:number = Number(process.argv[2]);
 
-    const daily:string[] = process.argv.slice(3)
-    let dailyHours:number[] = []
+    const daily:string[] = process.argv.slice(3);
+    let dailyHours:number[] = [];
     for(let i = 0; i < daily.length; i++){
         if(isNaN(Number(daily[i]))){
-            throw new Error('Provided values are not numbers!')
+            throw new Error('Provided values are not numbers!');
         }
-        dailyHours = dailyHours.concat(Number(daily[i]))
+        dailyHours = dailyHours.concat(Number(daily[i]));
     }
 
     return {
         target : target,
         dailyHours : dailyHours
-    }
-}
+    };
+};
 
 const calculateExercises = (dailyExerciseHours:number[],targetAmount:number):analysis => {
     const result:analysis = {
@@ -46,52 +46,52 @@ const calculateExercises = (dailyExerciseHours:number[],targetAmount:number):ana
         ratingDescription: '',
         target: 0,
         average: 0
-    }
+    };
 
-    result.periodLength = dailyExerciseHours.length
-    result.target = targetAmount
+    result.periodLength = dailyExerciseHours.length;
+    result.target = targetAmount;
 
-    let sum:number = 0
+    let sum:number = 0;
     for(let i = 0; i < result.periodLength; i++){
         if(dailyExerciseHours[i]){
-            result.trainingDays++ //count if not 0
-            sum += dailyExerciseHours[i]
+            result.trainingDays++; //count if not 0
+            sum += dailyExerciseHours[i];
         }
     }
-    result.average = sum / result.periodLength
-    result.success = result.average >= targetAmount
+    result.average = sum / result.periodLength;
+    result.success = result.average >= targetAmount;
     //rating
     if(result.average > targetAmount){
-        result.rating = 1
-        result.ratingDescription = 'exceeded expectation'
+        result.rating = 1;
+        result.ratingDescription = 'exceeded expectation';
     }
     else if(result.average < targetAmount){
-        result.rating = 3
-        result.ratingDescription = 'expectation not met'
+        result.rating = 3;
+        result.ratingDescription = 'expectation not met';
     }
     else{
-        result.rating = 2
-        result.ratingDescription = 'met expectation'
+        result.rating = 2;
+        result.ratingDescription = 'met expectation';
     }
 
-    return result
+    return result;
 
-}
+};
 
 //console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1],2))
 
 
 try {
 
-    const {target,dailyHours} = parseArguments(process.argv)
-    console.log(calculateExercises(dailyHours,target))
+    const {target,dailyHours} = parseArguments(process.argv);
+    console.log(calculateExercises(dailyHours,target));
      
 } catch (error:unknown) {
-    let errorMessage = 'Something bad happened'
+    let errorMessage = 'Something bad happened';
     if(error instanceof Error){
-        errorMessage += ' Error '+ error.message
+        errorMessage += ' Error '+ error.message;
     }
-    console.log(errorMessage)
+    console.log(errorMessage);
 }
 
 
