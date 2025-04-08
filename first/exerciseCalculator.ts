@@ -8,12 +8,12 @@ interface analysis {
         average: number
 }
 
-interface exercise {
+export interface exercise {
     target : number,
     dailyHours : number[] 
 }
 
-const parseArguments = (args:string[]):exercise => {
+export const parseArguments = (args:string[]):exercise => {
 
     if(args.length < 4) throw new Error('Not enough arguments');
 
@@ -37,7 +37,28 @@ const parseArguments = (args:string[]):exercise => {
     };
 };
 
-const calculateExercises = (dailyExerciseHours:number[],targetAmount:number):analysis => {
+export const parseRequest = (targetHours:string,daily:string[]):exercise => {
+
+    if(isNaN(Number(targetHours))){
+         throw new Error('Provided values are not numbers!');
+     }    
+    const target:number = Number(targetHours);
+
+    let dailyHours:number[] = [];
+    for(let i = 0; i < daily.length; i++){
+         if(isNaN(Number(daily[i]))){
+             throw new Error('Provided values are not numbers!');
+         }
+         dailyHours = dailyHours.concat(Number(daily[i]));
+     }
+
+    return {
+         target : target,
+         dailyHours : dailyHours
+     };
+};
+
+export const calculateExercises = (dailyExerciseHours:number[],targetAmount:number):analysis => {
     const result:analysis = {
         periodLength: 0,
         trainingDays: 0,
