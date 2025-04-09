@@ -18,14 +18,14 @@ const getEntries = (): PatientNoSSN[] => {
 const addPatient = ( patient : NewPatient):Patient => { 
         
     //arguments contain everything except id
-   const newPaitent = {
+   const newPatient = {
     id : uuid(),
     ...patient
    };
 
-   patients.push(newPaitent);
+   patients.push(newPatient);
 
-    return newPaitent;
+    return newPatient;
 };
 
 export default {
