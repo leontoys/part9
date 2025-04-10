@@ -6,14 +6,25 @@ interface PartProps {
 };
 
 const Part = (props:PartProps) => {
-    console.log(props)//to silence
     switch(props.coursePart.kind){
         case 'basic':
-            return (<p>{props.coursePart.name} {props.coursePart.description} {props.coursePart.exerciseCount}</p>);
+            return (
+            <>
+            <p><strong>{props.coursePart.name} {props.coursePart.exerciseCount}</strong></p>
+            <p><em>{props.coursePart.description}</em></p>
+            </>);
         case 'group':
-            return (<p>{props.coursePart.name} {props.coursePart.groupProjectCount} {props.coursePart.exerciseCount}</p>);
+            return (
+                <>
+                <p><strong>{props.coursePart.name} {props.coursePart.exerciseCount}</strong></p>
+                <p><em>Group project count {props.coursePart.groupProjectCount}</em></p>
+                </>);            
         case 'background':
-            return (<p>{props.coursePart.name} {props.coursePart.description} {props.coursePart.exerciseCount} {props.coursePart.backgroundMaterial}</p>);
+            return (
+                <>
+                <p><strong>{props.coursePart.name} {props.coursePart.exerciseCount}</strong></p>
+                <p><em>{props.coursePart.description} {props.coursePart.backgroundMaterial}</em></p>
+                </>);  
         default : 
             return (<></>);
     }
