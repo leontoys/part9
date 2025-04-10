@@ -38,6 +38,13 @@ const App = () => {
       description: "a hard part",
       kind: "basic",
     },
+    {
+      name: "Next JS in frontend",
+      exerciseCount: 10,
+      description: "a hard part",
+      requirements : "Javascript",
+      kind: "requirements",
+    },
   ];
 
 
