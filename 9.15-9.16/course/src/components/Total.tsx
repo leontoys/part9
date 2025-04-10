@@ -1,15 +1,18 @@
-import { courseParts, coursePart  } from "../types";
+import { CoursePart } from "../types"; //this is type
 
-const Content = (props:courseParts) => {
+//this is props object
+interface TotalProps {
+  courseParts : CoursePart[];
+};
 
-    const totalExercises:number = props.courseParts.reduce((sum:number, part:coursePart) => sum + part.exerciseCount, 0);
+const Total = (props:TotalProps) => {
+     const totalExercises:number = props.courseParts.reduce((sum:number, part:CoursePart) => sum + part.exerciseCount, 0);
 
-
-    return (
+  return (
         <p>
-          Number of exercises {totalExercises}
-        </p>
-    )
+           Number of exercises {totalExercises}
+         </p>
+  )
 }
 
-export default Content
+export default Total
