@@ -15,12 +15,18 @@ const getEntries = (): PatientNoSSN[] => {
     }));
 };
 
+const findById = (id:string):Patient | undefined => {
+    const patient = patients.find( patient => patient.id === id);
+    return patient;
+};
+
 const addPatient = ( patient : NewPatient):Patient => { 
         
     //arguments contain everything except id
    const newPatient = {
     id : uuid(),
-    ...patient
+    entries:[],
+    ...patient,
    };
 
    patients.push(newPatient);
@@ -30,5 +36,6 @@ const addPatient = ( patient : NewPatient):Patient => {
 
 export default {
     getEntries,
-    addPatient
+    addPatient,
+    findById
 };
