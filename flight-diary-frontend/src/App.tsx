@@ -25,6 +25,7 @@ const App = () => {
 
   const addEntry = async (event: React.SyntheticEvent) => {
     event.preventDefault();
+    console.log("visiblity",visibility);
     const diaryEntry:NewDiaryEntry = {
       date,
       comment,
@@ -33,14 +34,11 @@ const App = () => {
     };
     try {
       const addedEntry:DiaryEntry  =  await diaryService.create(diaryEntry);
-      console.log(addedEntry);
       setDiaries(diaries.concat(addedEntry));      
     } catch (error) {
       if(axios.isAxiosError(error)){
-        console.error(error.status);
-        console.error(typeof error.response?.data);
         setError(error.response?.data);
-        setTimeout(()=>setError(""),2000);
+        setTimeout(()=>setError(""),5000);
       }
       else{
         console.error(error);
@@ -60,15 +58,27 @@ const App = () => {
       <form onSubmit={addEntry}>
         <div>
           <label>date</label>
-          <input value={date} onChange={({target})=>setDate(target.value)}></input>
+          <input type="date" value={date} onChange={({target})=>setDate(target.value)}></input>
         </div>
         <div>
-          <label>visibility</label>
-          <input value={visibility} onChange={({target})=>setVisibility(target.value)}></input>
+          <label>visibility</label>         
+          { Object.values(Visibility).map(v => (
+            <>
+            <input type="radio" value={v.toString()} name="visibility"
+            onChange={({target})=>setVisibility(target.value)}></input>
+            <label>{v.toString()}</label>
+            </>
+          ) )}
         </div>
         <div>
           <label>weather</label>
-          <input value={weather} onChange={({target})=>setWeather(target.value)}></input>
+          { Object.values(Weather).map(v => (
+            <>
+            <input type="radio" value={v.toString()} name="weather"
+            onChange={({target})=>setWeather(target.value)}></input>
+            <label>{v.toString()}</label>
+            </>
+          ) )}     
         </div>
         <div>
           <label>comments</label>
