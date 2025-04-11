@@ -7,8 +7,8 @@ const App = () => {
 
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [date, setDate] = useState<string>("");
-  const [visibility, setVisibility] = useState<string>("");
-  const [weather, setWeather] = useState<string>("");
+  const [visibility, setVisibility] = useState<Visibility>(Visibility.Great);
+  const [weather, setWeather] = useState<Weather>(Weather.Sunny);
   const [comment, setComment] = useState<string>("");
   const [error,setError] = useState<string>("");
 
@@ -29,8 +29,8 @@ const App = () => {
     const diaryEntry:NewDiaryEntry = {
       date,
       comment,
-      visibility:visibility as Visibility,
-      weather : weather as Weather,
+      visibility,
+      weather,
     };
     try {
       const addedEntry:DiaryEntry  =  await diaryService.create(diaryEntry);
@@ -46,8 +46,8 @@ const App = () => {
     }
 
     setDate("");
-    setVisibility("");
-    setWeather("");
+    setVisibility(Visibility.Great);
+    setWeather(Weather.Sunny);
     setComment("");
   };
 
@@ -63,21 +63,21 @@ const App = () => {
         <div>
           <label>visibility</label>         
           { Object.values(Visibility).map(v => (
-            <>
-            <input type="radio" value={v.toString()} name="visibility"
-            onChange={({target})=>setVisibility(target.value)}></input>
+            <span key={v}>
+            <input type="radio" value={v} name="visibility" checked={visibility === v}
+            onChange={({target})=>setVisibility(target.value as Visibility)}></input>
             <label>{v.toString()}</label>
-            </>
+            </span>
           ) )}
         </div>
         <div>
           <label>weather</label>
           { Object.values(Weather).map(v => (
-            <>
-            <input type="radio" value={v.toString()} name="weather"
-            onChange={({target})=>setWeather(target.value)}></input>
+            <span key={v}>
+            <input type="radio" value={v} name="weather" checked={weather === v}
+            onChange={({target})=>setWeather(target.value as Weather)}></input>
             <label>{v.toString()}</label>
-            </>
+            </span>
           ) )}     
         </div>
         <div>
