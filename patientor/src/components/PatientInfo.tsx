@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Diagnosis, Entry, HealthCheckRating, Patient } from '../types';
 import patientService from '../services/patients';
 import EntryInfo from './EntryInfo';
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, Select, OutlinedInput, MenuItem } from '@mui/material';
+import React from 'react';
 
 interface Props {
   diagnoses: Diagnosis[]
@@ -15,8 +16,20 @@ const PatientInfo = ({ diagnoses }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
-  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis[]>([]);
+  const [diagnosisCodes, setDiagnosisCodes] = React.useState<string[]>([]);
   const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating|string>("");
+
+  console.log("diagnoses",diagnoses);
+  console.log("codes",diagnosisCodes);
+  const handleChange = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
+    const {
+      target: { value },
+    } = event;
+    setDiagnosisCodes(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };  
 
   const addEntry = async (event:SyntheticEvent) => {
     event.preventDefault();
@@ -29,6 +42,7 @@ const PatientInfo = ({ diagnoses }: Props) => {
         description,
         date,
         specialist,
+        diagnosisCodes,
         type:"HealthCheck",
       });
       setPatient(updatedPatient);
@@ -37,15 +51,6 @@ const PatientInfo = ({ diagnoses }: Props) => {
     }
   };
 
-  const onDiagnosisCodesChange = (event: SelectChangeEvent<string>) => {
-    event.preventDefault();
-    if ( typeof event.target.value === "string") {
-      const value = event.target.value;
-      const values = value.split(",");
-      console.log("values",values);
-      setDiagnosisCodes(values.map( value => value as unknown as Diagnosis));
-    }
-  };  
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -91,9 +96,21 @@ const PatientInfo = ({ diagnoses }: Props) => {
           </label>
         </div>
         <div>
-          <label>diagnosisCodes
-            <input value={diagnosisCodes.join(",")}
-                    onChange={onDiagnosisCodesChange}/>
+          <label>diagnosis codes
+          <Select
+          multiple
+          value={diagnosisCodes}
+          onChange={handleChange}
+        >
+          {diagnoses.map((diagnosis) => (
+            <MenuItem
+              key={diagnosis.code}
+              value={diagnosis.code}
+            >
+              {diagnosis.code}
+            </MenuItem>
+          ))}
+        </Select>
           </label>
         </div>
         <div>
