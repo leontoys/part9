@@ -80,7 +80,7 @@ const PatientInfo = ({ diagnoses }: Props) => {
         </div>
         <div>
           <label>date
-            <input value={date}
+            <input type="date" value={date}
                     onChange={({target}) => setDate(target.value)}/>
           </label>
         </div>
