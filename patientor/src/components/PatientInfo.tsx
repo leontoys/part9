@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Diagnosis, Entry, HealthCheckRating, Patient } from '../types';
 import patientService from '../services/patients';
 import EntryInfo from './EntryInfo';
-import { SelectChangeEvent, Select, OutlinedInput, MenuItem } from '@mui/material';
+import { SelectChangeEvent, Select, MenuItem } from '@mui/material';
 import React from 'react';
 
 interface Props {
@@ -17,7 +17,7 @@ const PatientInfo = ({ diagnoses }: Props) => {
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = React.useState<string[]>([]);
-  const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating|string>("");
+  const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(1);
 
   console.log("diagnoses",diagnoses);
   console.log("codes",diagnosisCodes);
@@ -44,6 +44,7 @@ const PatientInfo = ({ diagnoses }: Props) => {
         specialist,
         diagnosisCodes,
         type:"HealthCheck",
+        healthCheckRating
       });
       setPatient(updatedPatient);
     } catch (error:unknown) {
