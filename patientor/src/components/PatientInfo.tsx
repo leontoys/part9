@@ -23,7 +23,15 @@ const PatientInfo = ({ diagnoses }: Props) => {
   const [specialist, setSpecialist] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = React.useState<string[]>([]);
   const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(HealthCheckRating.Healthy);
-  const [entryType, setEntryType] = useState<string>("HealthCheck");
+  const [entryType, setEntryType] = useState<Entry["type"]>("HealthCheck");
+  //hospital
+  const [dischargeDate, setDischargeDate] = useState('');
+  const [dischargeCriteria, setDischargeCriteria] = useState('');
+  //occupational
+  const [employerName, setEmployerName] = useState('');
+  const [sickStartDate, setSickStartDate] = useState('');
+  const [sickEndDate, setSickEndDate] = useState('');
+
 
   const ratingOptions: ratingOption[] = Object.entries(HealthCheckRating)
     .filter(([key, value]) => isNaN(Number(key))) // Filter out numeric values
@@ -53,6 +61,7 @@ const PatientInfo = ({ diagnoses }: Props) => {
     event.preventDefault();
     console.log({ description, date, specialist, diagnosisCodes, healthCheckRating });
     const id: string = patient?.id as string;
+
     let entryData: EntryWithoutId;
 
     if (entryType === "HealthCheck") {
@@ -64,8 +73,34 @@ const PatientInfo = ({ diagnoses }: Props) => {
         type: "HealthCheck",
         healthCheckRating
       };
-      }
-   
+    } else if (entryType === "Hospital") {
+      entryData = {
+        description,
+        date,
+        specialist,
+        diagnosisCodes,
+        type: "Hospital",
+        discharge: {
+          date: dischargeDate,
+          criteria: dischargeCriteria
+        }
+      };
+    } else if (entryType === "OccupationalHealthcare") {
+      entryData = {
+        description,
+        date,
+        specialist,
+        diagnosisCodes,
+        type: "OccupationalHealthcare",
+        employerName,
+        sickLeave: {
+          startDate: sickStartDate,
+          endDate: sickEndDate
+        }
+      };
+    }
+
+
     try {
       const updatedPatient = await patientService.addEntries(
         id,
@@ -150,7 +185,7 @@ const PatientInfo = ({ diagnoses }: Props) => {
             </Select>
           </label>
         </div>
-        <div>
+        {/* <div>
           <label>Health check rating
             <Select
               value={healthCheckRating}
@@ -163,7 +198,55 @@ const PatientInfo = ({ diagnoses }: Props) => {
               ))}
             </Select>
           </label>
-        </div>
+        </div> */}
+        {entryType === "HealthCheck" && (
+          <div>
+            <label>Health check rating</label>
+            <Select value={healthCheckRating} onChange={handleHealthCheckChange}>
+              {ratingOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+        )}
+
+        {entryType === "Hospital" && (
+          <div>
+            <div>
+            <label>Discharge date
+              <input type="date" value={dischargeDate} onChange={(e) => setDischargeDate(e.target.value)} />
+            </label>
+            </div>
+            <div>
+            <label>Discharge criteria
+              <input value={dischargeCriteria} onChange={(e) => setDischargeCriteria(e.target.value)} />
+            </label>
+            </div>
+          </div>
+        )}
+
+        {entryType === "OccupationalHealthcare" && (
+          <div>
+            <div>
+            <label>Employer name
+              <input value={employerName} onChange={(e) => setEmployerName(e.target.value)} />
+            </label>
+            </div>
+            <div>
+            <label>Sick leave start
+              <input type="date" value={sickStartDate} onChange={(e) => setSickStartDate(e.target.value)} />
+            </label>
+            </div>
+            <div>
+            <label>Sick leave end
+              <input type="date" value={sickEndDate} onChange={(e) => setSickEndDate(e.target.value)} />
+            </label>
+            </div>
+          </div>
+        )}
+
 
         <button type='submit'>add</button>
       </form>
