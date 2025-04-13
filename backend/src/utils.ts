@@ -9,6 +9,12 @@ export const NewPatientSchema = z.object({
     gender : z.nativeEnum(Gender)
 });
 
+export const NewEntrySchema = z.object({
+    description : z.string(),
+    date : z.string().date(),
+    specialist : z.string(),
+});
+
 export const toNewPatient = (object:unknown):NewPatient => {
 
     return NewPatientSchema.parse(object);

@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import patientService from '../services/patientsService';
-import { NewPatientSchema } from '../utils';
+import { NewPatientSchema, NewEntrySchema } from '../utils';
 
 import { z } from 'zod';
 import { NewPatient, PatientNoSSN, Patient, EntryWithoutId } from '../types';
@@ -44,7 +44,18 @@ router.post('/', newPatientParser, (req: Request<unknown, unknown, NewPatient>, 
   res.json(addedPatient);
 });
 
-router.post('/:id/entries', (req: Request<{id:string}, unknown, EntryWithoutId>, res: Response<Patient>) => {  
+const newEntryParser = (req: Request, _res: Response, next: NextFunction) => { 
+  try {
+    NewEntrySchema.parse(req.body);
+    console.log(req.body);
+    next();
+  } catch (error: unknown) {
+    console.error(error);
+    next(error);
+  }
+};
+
+router.post('/:id/entries', newEntryParser, (req: Request<{id:string}, unknown, EntryWithoutId>, res: Response<Patient>) => {  
   console.log('---adding entries---');
   const patient = patientService.findById(req.params.id);
   if(patient){
