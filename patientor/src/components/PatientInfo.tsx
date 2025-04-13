@@ -1,6 +1,6 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Diagnosis, Entry, HealthCheckRating, Patient } from '../types';
+import { Diagnosis, Entry, EntryWithoutId, HealthCheckRating, Patient } from '../types';
 import patientService from '../services/patients';
 import EntryInfo from './EntryInfo';
 import { SelectChangeEvent, Select, MenuItem } from '@mui/material';
@@ -23,12 +23,13 @@ const PatientInfo = ({ diagnoses }: Props) => {
   const [specialist, setSpecialist] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = React.useState<string[]>([]);
   const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(HealthCheckRating.Healthy);
+  const [entryType, setEntryType] = useState<string>("HealthCheck");
 
   const ratingOptions: ratingOption[] = Object.entries(HealthCheckRating)
     .filter(([key, value]) => isNaN(Number(key))) // Filter out numeric values
     .map(([key, value]) => ({
       value: value as HealthCheckRating,
-      label: key 
+      label: key
     }));
 
   console.log("diagnoses", diagnoses);
@@ -50,19 +51,25 @@ const PatientInfo = ({ diagnoses }: Props) => {
 
   const addEntry = async (event: SyntheticEvent) => {
     event.preventDefault();
-    console.log({ description, date, specialist, diagnosisCodes,healthCheckRating  });
+    console.log({ description, date, specialist, diagnosisCodes, healthCheckRating });
     const id: string = patient?.id as string;
+    let entryData: EntryWithoutId;
+
+    if (entryType === "HealthCheck") {
+      entryData = {
+        description,
+        date,
+        specialist,
+        diagnosisCodes,
+        type: "HealthCheck",
+        healthCheckRating
+      };
+      }
+   
     try {
       const updatedPatient = await patientService.addEntries(
         id,
-        {
-          description,
-          date,
-          specialist,
-          diagnosisCodes,
-          type: "HealthCheck",
-          healthCheckRating
-        });
+        entryData);
       setPatient(updatedPatient);
     } catch (error: unknown) {
       console.error(error?.message);
@@ -95,6 +102,18 @@ const PatientInfo = ({ diagnoses }: Props) => {
       <p>ssn : {patient.ssn}</p>
       <p>occupation : {patient.occupation}</p>
       <form onSubmit={addEntry}>
+        <div>
+          <label>description
+            <Select
+              value={entryType}
+              onChange={(e) => setEntryType(e.target.value as Entry["type"])}
+            >
+              <MenuItem value="HealthCheck">Health Check</MenuItem>
+              <MenuItem value="Hospital">Hospital</MenuItem>
+              <MenuItem value="OccupationalHealthcare">Occupational Healthcare</MenuItem>
+            </Select>
+          </label>
+        </div>
         <div>
           <label>description
             <input value={description}
